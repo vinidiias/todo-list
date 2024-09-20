@@ -1,0 +1,8 @@
+.nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+    padding: 2em;
+    color: #5E5E5E;
+}

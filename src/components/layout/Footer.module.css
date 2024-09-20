@@ -1,0 +1,26 @@
+footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: black;
+}
+
+p span {
+    font-weight: bold;
+}
+
+.social_list {
+    font-size: 1.4em;
+    list-style-type: none;
+    display: flex;
+}
+
+.social_list li a {
+    margin-right: .3em;
+    color: #3d5756;
+    transition: 0.5s;
+}
+
+.social_list li a:hover {
+    color: black;
+}
