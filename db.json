@@ -1,22 +1,5 @@
 {
-  "tasks": [
-    {
-      "id": "2b72",
-      "name": "asd",
-      "importance": {
-        "id": "2",
-        "name": "Alto"
-      }
-    },
-    {
-      "id": "e47d",
-      "name": "Vinícius de Oliveira Dias",
-      "importance": {
-        "id": "1",
-        "name": "Muito Alto"
-      }
-    }
-  ],
+  "tasks": [],
   "importances": [
     {
       "id": "1",
