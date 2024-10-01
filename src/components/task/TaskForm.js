@@ -4,22 +4,18 @@ import Select from '../form/Select'
 import SubmiteButton from '../form/SubmitButton'
 import styles from './TaskForm.module.css'
 
+import api from '../../services/Api'
+
 function TaskForm( { handleSubmit, btnText, taskData, toggleOnChange }) {
 
     const [importances, setImportances] = useState([])
     const [task, setTask] = useState(taskData || [])
 
     useEffect(() => {
-        fetch('http://localhost:5000/importances', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-        .then((resp) => resp.json())
-        .then(data => {
-            setImportances(data)
-            console.log(data)
+        api.get('importances')
+        .then((response) => {
+            setImportances(response.data)
+            console.log(response)
         })
         .catch(err => console.log(err))
     }, [])
@@ -29,10 +25,9 @@ function TaskForm( { handleSubmit, btnText, taskData, toggleOnChange }) {
     }
 
     function handleImportance(e) {
-        setTask({...task, importance: {
-            id: e.target.value,
-            name: e.target.options[e.target.selectedIndex].text
-            },
+        setTask({...task, 
+            importance: e.target.options[e.target.selectedIndex].text,
+            importance_id: e.target.value,
         })
     }
 
@@ -58,7 +53,7 @@ function TaskForm( { handleSubmit, btnText, taskData, toggleOnChange }) {
           text="Grau de importância"
           options={importances}
           handleOnChange={handleImportance}
-          value={task.importance ? task.importance.id : ''}
+          value={task.importance ? task.importance_id : ''}
         />
 
         <div className={styles.submit}>

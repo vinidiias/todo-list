@@ -6,11 +6,14 @@ import TaskCard from '../components/task/TaskCard';
 import TaskForm from '../components/task/TaskForm'
 import Container from '../components//layout/Container'
 
+import api from '../services/Api';
+
 function ToDo() {
 
     //const [taskForm, setTaskForm] = useState(false)
     const [showTaskForm, setShowTaskForm] = useState(false)
     const [tasks, setTasks] = useState([])
+    const [taskUpdated, setTaskUpdated] = useState(false)
 
     function toggleChange() {
         console.log('teste')
@@ -22,51 +25,49 @@ function ToDo() {
     }
 
     useEffect(() => {
-      fetch('http://localhost:5000/tasks', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      .then(resp => resp.json())
-      .then(data => {
-        let taskSort = data.sort(function(a, b){
-          return a.importance.id < b.importance.id ? -1
-          : a.importance.id > b.importance.id ? 1 : 0
-        });
-        setTasks(taskSort)
-      })
-      .catch(err => console.log(err))
-    }, [tasks])
+      api
+        .get("tasks")
+        .then((response) => {
+          let taskSort = response.data.sort(function (a, b) {
+            return a.importance_id < b.importance_id
+              ? -1
+              : a.importance_id > b.importance_id
+              ? 1
+              : 0;
+          });
+          setTasks(taskSort);
+          console.log(taskSort)
+          console.log(tasks.length)
+        })
+        .catch((err) => console.log(err));
+    }, [taskUpdated])
 
-    function createTask(task) {
-        fetch('http://localhost:5000/tasks', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(task)
+    async function newCreateTask(task) {
+      try{
+        const taskData = await api.post('tasks', {
+          name: task.name,
+          importance: task.importance,
+          importance_id: task.importance_id
         })
-        .then(resp => resp.json())
-        .then(data => {
-            setShowTaskForm(false)
-        })
-        .catch(err => console.log(err))
+        setShowTaskForm(false)
+        setTaskUpdated(!taskUpdated)
+      }catch(err){
+        console.log(err)
+      }
     }
-
+    
     function removeTask(id) {
-      fetch(`http://localhost:5000/tasks/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      .then(resp => resp.json())
-      .then(data => {
-        setTasks(tasks.filter((task) =>
-        task.id !== id))
-      })
-      .catch(err => console.log(err))
+      try {
+        api
+          .delete(`tasks/${id}`)
+          .then(() => {
+            setTasks(tasks.filter((task) => task.id !== id));
+            setTaskUpdated(!taskUpdated)
+          })
+          .catch((err) => console.log(err));
+      } catch (err) {
+        console.log(err);
+      }
     }
 
     return (
@@ -78,7 +79,7 @@ function ToDo() {
           </div>
           <div>
             {showTaskForm && (
-              <TaskForm btnText="Add Task" handleSubmit={createTask} toggleOnChange={toggleChangeFalse} />
+              <TaskForm btnText="Add Task" handleSubmit={newCreateTask} toggleOnChange={toggleChangeFalse} />
             )}
           </div>
         </Container>
@@ -87,9 +88,9 @@ function ToDo() {
               tasks.map((task) => (
                 <TaskCard 
                 name={task.name}
-                importance={task.importance.name}
-                key={task.id}
-                id={task.id}
+                importance={task.importance}
+                key={task._id}
+                id={task._id}
                 handleRemove={removeTask}
                 />
               ))}
