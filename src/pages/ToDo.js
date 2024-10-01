@@ -40,7 +40,7 @@ function ToDo() {
         .catch((err) => console.log(err));
     }, [updated])
 
-    async function newCreateTask(task) {
+    function newCreateTask(task) {
       try{
         fetch('https://deploy-mongo-db.vercel.app/tasks', {
           method: 'POST',

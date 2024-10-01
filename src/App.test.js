@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import App from './App';
 
 test('renders NavBar, ToDo, and Footer components', () => {
+  // Renderiza o componente App
   render(<App />);
 
   // Verifica se o título "Task to do" do NavBar é renderizado
