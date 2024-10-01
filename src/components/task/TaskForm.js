@@ -4,18 +4,22 @@ import Select from '../form/Select'
 import SubmiteButton from '../form/SubmitButton'
 import styles from './TaskForm.module.css'
 
-import api from '../../services/Api'
-
 function TaskForm( { handleSubmit, btnText, taskData, toggleOnChange }) {
 
     const [importances, setImportances] = useState([])
     const [task, setTask] = useState(taskData || [])
 
-    useEffect(() => {
-        api.get('importances')
-        .then((response) => {
-            setImportances(response.data)
-            console.log(response)
+        useEffect(() => {
+            fetch('https://deploy-mongo-db.vercel.app/importances', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+        /*api.get('importances')*/
+        .then((resp) => resp.json())
+        .then(data => {
+            setImportances(data)
         })
         .catch(err => console.log(err))
     }, [])
@@ -64,6 +68,7 @@ function TaskForm( { handleSubmit, btnText, taskData, toggleOnChange }) {
         </div>
       </form>
     );
+
 }
 
 export default TaskForm

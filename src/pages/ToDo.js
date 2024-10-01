@@ -6,8 +6,6 @@ import TaskCard from '../components/task/TaskCard';
 import TaskForm from '../components/task/TaskForm'
 import Container from '../components//layout/Container'
 
-import api from '../services/Api';
-
 function ToDo() {
 
     //const [taskForm, setTaskForm] = useState(false)
@@ -24,28 +22,38 @@ function ToDo() {
     }
 
     useEffect(() => {
-      api
-        .get("tasks")
-        .then((response) => {
-          let taskSort = response.data.sort(function (a, b) {
-            return a.importance_id < b.importance_id
-              ? -1
-              : a.importance_id > b.importance_id
-              ? 1
-              : 0;
-          });
-          setTasks(taskSort);
-        })
+      fetch('https://deploy-mongo-db.vercel.app/tasks', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(resp => resp.json())
+      .then(data => {
+        let taskSort = data.sort(function(a, b){
+          return a.importance_id < b.importance_id ? -1
+          : a.importance_id > b.importance_id ? 1 : 0
+        });
+        setTasks(taskSort)
+      })
         .catch((err) => console.log(err));
     }, [tasks.length])
 
     async function newCreateTask(task) {
       try{
-        await api.post('tasks', {
+        fetch('https://deploy-mongo-db.vercel.app/tasks', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(task)
+      })
+      .then(resp => resp.json())
+        /*await api.post('tasks', {
           name: task.name,
           importance: task.importance,
           importance_id: task.importance_id
-        })
+        })*/
         setShowTaskForm(false)
       }catch(err){
         console.log(err)
@@ -54,8 +62,14 @@ function ToDo() {
 
     function removeTask(id) {
       try {
-        api
-          .delete(`tasks/${id}`)
+        fetch(`https://deploy-mongo-db.vercel.app/tasks/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+        /*api
+          .delete(`tasks/${id}`)*/
           .then(() => {
             setTasks(tasks.filter((task) => task.id !== id));
           })
