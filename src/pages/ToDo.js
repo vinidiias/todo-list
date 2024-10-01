@@ -13,7 +13,6 @@ function ToDo() {
     //const [taskForm, setTaskForm] = useState(false)
     const [showTaskForm, setShowTaskForm] = useState(false)
     const [tasks, setTasks] = useState([])
-    const [taskUpdated, setTaskUpdated] = useState(false)
 
     function toggleChange() {
         console.log('teste')
@@ -36,33 +35,29 @@ function ToDo() {
               : 0;
           });
           setTasks(taskSort);
-          console.log(taskSort)
-          console.log(tasks.length)
         })
         .catch((err) => console.log(err));
-    }, [taskUpdated])
+    }, [tasks.length])
 
     async function newCreateTask(task) {
       try{
-        const taskData = await api.post('tasks', {
+        await api.post('tasks', {
           name: task.name,
           importance: task.importance,
           importance_id: task.importance_id
         })
         setShowTaskForm(false)
-        setTaskUpdated(!taskUpdated)
       }catch(err){
         console.log(err)
       }
     }
-    
+
     function removeTask(id) {
       try {
         api
           .delete(`tasks/${id}`)
           .then(() => {
             setTasks(tasks.filter((task) => task.id !== id));
-            setTaskUpdated(!taskUpdated)
           })
           .catch((err) => console.log(err));
       } catch (err) {
