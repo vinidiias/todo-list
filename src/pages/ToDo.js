@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { MdOutlineAddCircle } from "react-icons/md";
 import styles from './ToDo.module.css'
 
@@ -6,10 +6,16 @@ import TaskCard from '../components/task/TaskCard';
 import TaskForm from '../components/task/TaskForm'
 import Container from '../components//layout/Container'
 
+import { UserContext } from '../Context/UserContext';
+
 import { motion } from 'framer-motion';
 
 function ToDo() {
-
+  const [showTaskForm, setShowTaskForm] = useState(false)
+  const [tasks, setTasks] = useState([])
+  const [updated, setUpdated] = useState(false)
+  const [userData, setUserData] = useContext(UserContext)
+  
   const variacoesAnimadas= {
     inicio: {
       opacity: 0.8,
@@ -41,9 +47,7 @@ function ToDo() {
       transition: { duration: 0.2, ease: [0.48, 0.15, 0.25, 0.96] },
     },
   }
-    const [showTaskForm, setShowTaskForm] = useState(false)
-    const [tasks, setTasks] = useState([])
-    const [updated, setUpdated] = useState(false)
+
 
     function toggleChange() {
         setShowTaskForm(true)
@@ -54,14 +58,16 @@ function ToDo() {
     }
 
     useEffect(() => {
-      fetch('https://deploy-mongo-db.vercel.app/tasks', {
+      fetch(`http://localhost:3333/tasks/${userData.user_id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          'auth': userData.user_id,
         },
       })
       .then(resp => resp.json())
       .then(data => {
+        console.log(data)
         let taskSort = data.sort(function(a, b){
           return a.importance_id < b.importance_id ? -1
           : a.importance_id > b.importance_id ? 1 : 0
@@ -73,10 +79,11 @@ function ToDo() {
 
     function newCreateTask(task) {
       try{
-        fetch('https://deploy-mongo-db.vercel.app/tasks', {
+        fetch(`http://localhost:3333/${userData.user_id}/tasks`, {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
+              'auth': userData.user_id,
           },
           body: JSON.stringify(task)
       })
@@ -98,10 +105,11 @@ function ToDo() {
 
     function removeTask(id) {
       try {
-        fetch(`https://deploy-mongo-db.vercel.app/tasks/${id}`, {
+        fetch(`http://localhost:3333/${userData.user_id}/tasks/${id}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
+            'auth': userData.user_id,
           },
         })
         /*api

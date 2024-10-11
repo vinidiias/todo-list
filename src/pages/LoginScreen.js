@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
@@ -45,6 +45,17 @@ function LoginScreen() {
     },
   }
 
+  useEffect(() => {
+    if(userData.name){
+      setUserData(prevState => ({
+        ...prevState,
+        isLogged: false,
+        name: '',
+        user_id: '',
+      }))
+    }
+
+  },[])
   function toggleChange() {
     setShowLogin(!showLogin);
   }
@@ -64,7 +75,8 @@ function LoginScreen() {
           setUserData(prevState => ({
             ...prevState,
             isLogged: true,
-            name: data.name
+            name: data.name,
+            user_id: data._id
           }))
           navigate('/todo')
         }
