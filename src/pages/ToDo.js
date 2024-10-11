@@ -6,15 +6,46 @@ import TaskCard from '../components/task/TaskCard';
 import TaskForm from '../components/task/TaskForm'
 import Container from '../components//layout/Container'
 
+import { motion } from 'framer-motion';
+
 function ToDo() {
 
-    //const [taskForm, setTaskForm] = useState(false)
+  const variacoesAnimadas= {
+    inicio: {
+      opacity: 0.8,
+      x: 1000,
+    },
+    animacao: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.5
+      },
+    },
+    fim: {
+      opacity: 0,
+      x: 1000,
+      transition: {
+        duration: 1
+      },
+    }
+  }
+
+  const formAnimate = {
+    initial: { scale: 0.96, y: 20, opacity: 0 },
+    animate: { scale: 1, y: 0, opacity: 1, transition: { duration: 0.5, ease: [0.48, 0.15, 0.25, 0.96] } },
+    exit: {
+      scale: 0.6,
+      y: 100,
+      opacity: 0,
+      transition: { duration: 0.2, ease: [0.48, 0.15, 0.25, 0.96] },
+    },
+  }
     const [showTaskForm, setShowTaskForm] = useState(false)
     const [tasks, setTasks] = useState([])
     const [updated, setUpdated] = useState(false)
 
     function toggleChange() {
-        console.log('teste')
         setShowTaskForm(true)
     }
 
@@ -86,31 +117,47 @@ function ToDo() {
     }
 
     return (
-      <div className={styles.todo}>
+      <motion.div
+        className={styles.todo}
+        initial={"inicio"}
+        animate={"animacao"}
+        exit={"fim"}
+        variants={variacoesAnimadas}
+      >
         <Container customClass="margin_bottom">
           <div className={styles.todo_add} onClick={toggleChange}>
             <MdOutlineAddCircle />
             <p>Add New Task</p>
           </div>
-          <div>
-            {showTaskForm && (
-              <TaskForm btnText="Add Task" handleSubmit={newCreateTask} toggleOnChange={toggleChangeFalse} />
-            )}
-          </div>
+
+          {showTaskForm && (
+            <motion.div
+              initial={"initial"}
+              animate={"animate"}
+              exit={"exit"}
+              variants={formAnimate}
+            >
+              <TaskForm
+                btnText="Add Task"
+                handleSubmit={newCreateTask}
+                toggleOnChange={toggleChangeFalse}
+              />
+            </motion.div>
+          )}
         </Container>
         <Container customClass="wrap">
-            {tasks.length > 0 && 
-              tasks.map((task) => (
-                <TaskCard 
+          {tasks.length > 0 &&
+            tasks.map((task) => (
+              <TaskCard
                 name={task.name}
                 importance={task.importance}
                 key={task._id}
                 id={task._id}
                 handleRemove={removeTask}
-                />
-              ))}
+              />
+            ))}
         </Container>
-      </div>
+      </motion.div>
     );
 }
 
