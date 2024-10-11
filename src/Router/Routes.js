@@ -13,7 +13,7 @@ export const Routes = ({ isLogged }) => {
         },
         {
             path: '/todo',
-            element: isLogged ? <ToDo /> : <Navigate to="/todo-list" replace />,
+            element: isLogged ? <ToDo /> : <Navigate to="/todo-list" replace={true} />, // com replace ele não volta para '/todo' ao clicar em voltar
             errorElement: <ErrorPage />,
         },
     ]);
