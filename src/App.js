@@ -17,7 +17,7 @@ function App() {
 }
 
 function Content() {
-  const [userData, setUserData] = useContext(UserContext); // Use o contexto corretamente
+  const [userData] = useContext(UserContext); // Use o contexto corretamente
 
   return (
     <div className="app">
