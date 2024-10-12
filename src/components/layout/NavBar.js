@@ -10,7 +10,7 @@ function NavBar() {
     const [userData, setUserData]= useContext(UserContext)
 
     const LogoutHandler = (e) => {
-        e.preventDefault()
+        e.preventDefault();
 
         setUserData(prevState => ({
             ...prevState,
@@ -24,7 +24,7 @@ function NavBar() {
         <nav className={styles.nav}>
             {userData.name && <div><CgProfile /><h3>{userData.name}</h3></div>}
             <h1>Task to do</h1>
-            {userData.isLogged ? (<button onClick={LogoutHandler}>Logout</button>) : (<button>Login</button>)}
+            {userData.isLogged && (<button onClick={LogoutHandler}>Logout</button>)}
         </nav>
     )
 }

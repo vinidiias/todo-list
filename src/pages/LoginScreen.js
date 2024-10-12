@@ -46,26 +46,27 @@ function LoginScreen() {
   }
 
   useEffect(() => {
-    if(userData.name){
+    if (userData.name) {
       setUserData(prevState => ({
         ...prevState,
         isLogged: false,
         name: '',
         user_id: '',
-      }))
+      }));
     }
-
-  },[])
+  }, [userData.name, setUserData]);
+  
   function toggleChange() {
     setShowLogin(!showLogin);
   }
 
   async function loginHandler(user) {
      try{
-      await fetch('http://localhost:3333/session', {
+      await fetch('https://deploy-mongo-db.vercel.app/session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'auth': userData.user_id,
       },
         body: JSON.stringify(user)
       })
@@ -79,10 +80,45 @@ function LoginScreen() {
             user_id: data._id
           }))
           navigate('/todo')
+        } else {
+          alert(data.message)
+        }
+      }, [])
+      .catch(err => {
+        console.log(err)
+        alert('Erro ao entrar, tente novamente...')}
+      )
+    }catch(err){
+      alert('Falha no login, tente novamente...')
+    }
+  }
+
+  async function registerHandler(user) {
+    try{
+      await fetch('https://deploy-mongo-db.vercel.app/user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'auth': userData.user_id,
+      },
+        body: JSON.stringify(user)
+      })
+      .then(resp => resp.json())
+      .then(data => {
+        if(data.name){
+          setUserData(prevState => ({
+            ...prevState,
+            isLogged: true,
+            name: data.name,
+            user_id: data._id
+          }))
+          navigate('/todo')
+        }else {
+          alert(data.message)
         }
       }, [])
     }catch(err){
-      alert('Falha no login, tente novamente...')
+      alert('Falha ao registrar usuário, tente novamente...')
     }
   }
 
@@ -106,10 +142,10 @@ function LoginScreen() {
         >
           <LoginForm
             handleSubmit={loginHandler}
-            btnText="Sign Up"
-            textBtn="Log In"
-            textUser="New User"
-            textPassword="New Password"
+            btnText="Log In"
+            textBtn="Sign Up"
+            textUser="User"
+            textPassword="Password"
             toggleOnChange={toggleChange}
           />
         </motion.div>
@@ -122,11 +158,11 @@ function LoginScreen() {
           exit="exit"
         >
           <LoginForm
-            handleSubmit={loginHandler}
-            btnText="Log In"
-            textBtn="Sign Up"
-            textUser="User"
-            textPassword="Password"
+            handleSubmit={registerHandler}
+            btnText="Sign Up"
+            textBtn="Log In"
+            textUser="New User"
+            textPassword="New Password"
             toggleOnChange={toggleChange}
           />
         </motion.div>
