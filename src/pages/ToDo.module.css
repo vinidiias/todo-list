@@ -20,6 +20,12 @@
     font-size: 1.2em;
 }
 
+@media(max-width: 400px){
+    .todo_add {
+        font-size: .9em;
+    }
+}
+
 .todo_add:hover {
     color: black;
 }

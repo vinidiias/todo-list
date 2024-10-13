@@ -8,6 +8,24 @@
     list-style: none;
     width: 100%;
 }
+@media(max-width: 500px){
+    .nav {
+        font-size: 1.5em;
+    }
+    .nav button {
+        font-size: .5em;
+    }
+}
+
+@media(max-width: 390px){
+    .nav {
+        font-size: 1em;
+    }
+
+    .nav button {
+        font-size: .4;
+    }
+}
 
 .nav div {
     display: flex;
