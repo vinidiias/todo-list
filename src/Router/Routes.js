@@ -7,13 +7,13 @@ import TodoWrapper from "../pages/ToDo";
 export const Routes = ({ isLogged }) => {
     const router = createBrowserRouter([
         {
-            path: '/todo-list',
+            path: '/login',
             element: <LoginScreen />,
             errorElement: <ErrorPage />,
         },
         {
             path: '/todo',
-            element: isLogged ? <TodoWrapper /> : <Navigate to="/todo-list" replace={false} />, // com replace ele não volta para '/todo' ao clicar em voltar
+            element: <TodoWrapper />, // com replace ele não volta para '/todo' ao clicar em voltar
             errorElement: <ErrorPage />,
         },
     ]);

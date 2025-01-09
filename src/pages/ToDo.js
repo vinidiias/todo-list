@@ -7,6 +7,7 @@ import styles from './ToDo.module.css'
 import TaskCard from '../components/task/TaskCard';
 import TaskForm from '../components/task/TaskForm'
 import Container from '../components//layout/Container'
+import withAuth from '../hocs/withAuth';
 
 const reducerTask = (tasks, action) => {
   switch (action.type) {
@@ -187,4 +188,4 @@ const TodoWrapper = () => {
   return <TodoWithFetching userData={userData} />
 }
 
-export default TodoWrapper
+export default withAuth(TodoWrapper)
