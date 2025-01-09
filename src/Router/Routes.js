@@ -1,8 +1,8 @@
 import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
 
 import LoginScreen from "../pages/LoginScreen";
-import ToDo from "../pages/ToDo";
 import ErrorPage from "../components/layout/ErrorPage";
+import TodoWrapper from "../pages/ToDo";
 
 export const Routes = ({ isLogged }) => {
     const router = createBrowserRouter([
@@ -13,7 +13,7 @@ export const Routes = ({ isLogged }) => {
         },
         {
             path: '/todo',
-            element: isLogged ? <ToDo /> : <Navigate to="/todo-list" replace={false} />, // com replace ele não volta para '/todo' ao clicar em voltar
+            element: isLogged ? <TodoWrapper /> : <Navigate to="/todo-list" replace={false} />, // com replace ele não volta para '/todo' ao clicar em voltar
             errorElement: <ErrorPage />,
         },
     ]);

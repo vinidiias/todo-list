@@ -10,7 +10,7 @@ function TaskForm( { handleSubmit, btnText, taskData, toggleOnChange }) {
     const [task, setTask] = useState(taskData || [])
 
         useEffect(() => {
-            fetch('https://deploy-mongo-db.vercel.app/importances', {
+            fetch('http://localhost:3333/importances', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -59,7 +59,6 @@ function TaskForm( { handleSubmit, btnText, taskData, toggleOnChange }) {
           handleOnChange={handleImportance}
           value={task.importance ? task.importance_id : ''}
         />
-
         <div className={styles.submit}>
             <SubmiteButton text={btnText} />
             <button onClick={toggleOnChange}>

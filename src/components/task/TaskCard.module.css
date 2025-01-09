@@ -6,7 +6,7 @@
 }
 
 .task_card button {
-    background-color: transparent;
+    background: none;
     border:none;
     cursor: pointer;
     font-size: 1.1em;   
@@ -41,9 +41,13 @@
     column-gap: .7em;
     display: flex;
     align-items: center;
+    
     cursor: pointer;
 }
 
+.task_details h4 {
+    font-weight: 600;
+}
 
 .none {
     text-decoration: none;

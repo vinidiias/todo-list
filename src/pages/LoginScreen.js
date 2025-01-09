@@ -62,7 +62,7 @@ function LoginScreen() {
 
   async function loginHandler(user) {
      try{
-      await fetch('https://deploy-mongo-db.vercel.app/session', {
+      await fetch('http://localhost:3333/session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ function LoginScreen() {
 
   async function registerHandler(user) {
     try{
-      await fetch('https://deploy-mongo-db.vercel.app/user', {
+      await fetch('http://localhost:3333/user', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -130,7 +130,7 @@ function LoginScreen() {
       variants={variacoesAnimadas}
       className={styles.login_container}
     >
-      <h1>{showLogin ? "Sign Up" : "Log In"}</h1>
+      <h1>{!showLogin ? "Sign Up" : "Log In"}</h1>
 
       {showLogin ? (
         <motion.div

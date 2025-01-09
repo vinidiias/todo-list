@@ -1,20 +1,38 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState, useReducer } from 'react'
 import { MdOutlineAddCircle } from "react-icons/md";
+import { motion } from 'framer-motion';
+import { UserContext } from '../Context/UserContext';
+import withFetching from '../hocs/withFetching';
 import styles from './ToDo.module.css'
-
 import TaskCard from '../components/task/TaskCard';
 import TaskForm from '../components/task/TaskForm'
 import Container from '../components//layout/Container'
 
-import { UserContext } from '../Context/UserContext';
+const reducerTask = (tasks, action) => {
+  switch (action.type) {
+    case 'READ':
+      return action.tasks
+    case 'ADD':
+      {
+        return [...tasks, action.task]}
+    case 'DELETE':
+     { return tasks.filter((task) => task._id !== action._id)}
+    case 'INORDEM':
+      return tasks.sort(function (a, b) {
+        return a.importance_id < b.importance_id
+          ? -1
+          : a.importance_id > b.importance_id
+          ? 1
+          : 0;
+      });
+      default:
+        return tasks
+  }
+}
 
-import { motion } from 'framer-motion';
-
-function ToDo() {
+function ToDo({ data, error, userData}) {
   const [showTaskForm, setShowTaskForm] = useState(false);
-  const [tasks, setTasks] = useState([]);
-  const [updated, setUpdated] = useState(false);
-  const [userData] = useContext(UserContext);
+  const [tasks, dispatch] = useReducer(reducerTask, data || [])
 
   const variacoesAnimadas = {
     inicio: {
@@ -53,6 +71,12 @@ function ToDo() {
     },
   }
 
+  useEffect(() => {
+    if(data) {
+      dispatch({ type: 'READ', tasks: data})
+    }
+  }, [data])
+
   function toggleChange() {
     setShowTaskForm(true);
   }
@@ -61,32 +85,9 @@ function ToDo() {
     setShowTaskForm(false);
   }
 
-  useEffect(() => {
-    fetch(`https://deploy-mongo-db.vercel.app/tasks/${userData.user_id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        auth: userData.user_id,
-      },
-    })
-      .then((resp) => resp.json())
-      .then((data) => {
-        console.log(data);
-        let taskSort = data.sort(function (a, b) {
-          return a.importance_id < b.importance_id
-            ? -1
-            : a.importance_id > b.importance_id
-            ? 1
-            : 0;
-        });
-        setTasks(taskSort);
-      })
-      .catch((err) => console.log(err));
-  }, [updated, userData.user_id]);
-
-  function newCreateTask(task) {
+  function handleCreateTask(task) {
     try {
-      fetch(`https://deploy-mongo-db.vercel.app/${userData.user_id}/tasks`, {
+      fetch(`http://localhost:3333/${userData.user_id}/tasks`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -95,34 +96,26 @@ function ToDo() {
         body: JSON.stringify(task),
       })
         .then((resp) => resp.json())
-        .then(() => {
-          setUpdated(!updated);
+        .then((data) => {
           setShowTaskForm(false);
+          dispatch({type: 'ADD', task: data})
         });
-      /*await api.post('tasks', {
-          name: task.name,
-          importance: task.importance,
-          importance_id: task.importance_id
-        })*/
     } catch (err) {
       console.log(err);
     }
   }
 
-  function removeTask(id) {
+  function handleRemoveTask(id) {
     try {
-      fetch(`https://deploy-mongo-db.vercel.app/${userData.user_id}/tasks/${id}`, {
+      fetch(`http://localhost:3333/${userData.user_id}/tasks/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           auth: userData.user_id,
         },
       })
-        /*api
-          .delete(`tasks/${id}`)*/
         .then(() => {
-          setUpdated(!updated);
-          setTasks(tasks.filter((task) => task.id !== id));
+          dispatch({type: 'DELETE', _id: id})
         })
         .catch((err) => console.log(err));
     } catch (err) {
@@ -143,7 +136,6 @@ function ToDo() {
           <MdOutlineAddCircle />
           <p>Add New Task</p>
         </div>
-
         {showTaskForm && (
           <motion.div
             initial={"initial"}
@@ -153,26 +145,46 @@ function ToDo() {
           >
             <TaskForm
               btnText="Add Task"
-              handleSubmit={newCreateTask}
+              handleSubmit={handleCreateTask}
               toggleOnChange={toggleChangeFalse}
             />
           </motion.div>
         )}
       </Container>
       <Container customClass="wrap">
-        {tasks.length > 0 &&
-          tasks.map((task) => (
-            <TaskCard
-              name={task.name}
-              importance={task.importance}
-              key={task._id}
-              id={task._id}
-              handleRemove={removeTask}
-            />
-          ))}
+        {Array.isArray(tasks)  && tasks.length > 0 ?
+          tasks
+            .sort(function (a, b) {
+              return a.importance_id < b.importance_id
+                ? -1
+                : a.importance_id > b.importance_id
+                ? 1
+                : 0;
+            })
+            .map((task) => (
+              <TaskCard
+                name={task.name}
+                importance={task.importance}
+                key={task._id}
+                id={task._id}
+                handleRemove={handleRemoveTask}
+              />
+            )) : <p>Sem tarefas!</p>}
       </Container>
     </motion.div>
   );
 }
 
-export default ToDo
+const TodoWrapper = () => {
+  const [userData] = useContext(UserContext)
+
+  const TodoWithFetching = withFetching (
+    ToDo,
+    `http://localhost:3333/tasks/${userData.user_id}`,
+    userData.user_id
+  );
+
+  return <TodoWithFetching userData={userData} />
+}
+
+export default TodoWrapper
