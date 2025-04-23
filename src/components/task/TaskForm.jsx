@@ -10,7 +10,7 @@ function TaskForm( { handleSubmit, btnText, taskData, toggleOnChange }) {
     const [task, setTask] = useState(taskData || [])
 
         useEffect(() => {
-            fetch('http://localhost:3333/importances', {
+            fetch('https://todolist-api-iota-two.vercel.app/importances', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

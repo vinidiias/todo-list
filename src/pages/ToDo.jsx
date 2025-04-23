@@ -88,7 +88,7 @@ function ToDo({ data, error, userData}) {
 
   function handleCreateTask(task) {
     try {
-      fetch(`http://localhost:3333/${userData.user_id}/tasks`, {
+      fetch(`https://todolist-api-iota-two.vercel.app/${userData.user_id}/tasks`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -108,7 +108,7 @@ function ToDo({ data, error, userData}) {
 
   function handleRemoveTask(id) {
     try {
-      fetch(`http://localhost:3333/${userData.user_id}/tasks/${id}`, {
+      fetch(`https://todolist-api-iota-two.vercel.app/${userData.user_id}/tasks/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -181,7 +181,7 @@ const TodoWrapper = () => {
 
   const TodoWithFetching = withFetching (
     ToDo,
-    `http://localhost:3333/tasks/${userData.user_id}`,
+    `https://todolist-api-iota-two.vercel.app/tasks/${userData.user_id}`,
     userData.user_id
   );
 

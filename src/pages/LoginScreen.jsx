@@ -62,7 +62,7 @@ function LoginScreen() {
 
   async function loginHandler(user) {
      try{
-      await fetch('http://localhost:3333/session', {
+      await fetch('https://todolist-api-iota-two.vercel.app/session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -95,7 +95,7 @@ function LoginScreen() {
 
   async function registerHandler(user) {
     try{
-      await fetch('http://localhost:3333/user', {
+      await fetch('https://todolist-api-iota-two.vercel.app/user', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

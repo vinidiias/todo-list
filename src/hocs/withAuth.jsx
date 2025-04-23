@@ -9,7 +9,7 @@ const withAuth = (Component) => {
 
         useEffect(() => {
             if(!userData.isLogged) return navigate('/login')
-        }, [])
+        }, [navigate, userData.isLogged])
 
         return <Component {...props} />
     }
