@@ -1,6 +1,4 @@
-import { UserProvider, UserContext } from './Context/UserContext';
-import { useContext } from 'react';
-
+import { UserProvider } from './Context/UserContext';
 import { Routes } from './Router/Routes';
 
 import './App.css';
@@ -9,6 +7,7 @@ import Footer from './components/layout/Footer';
 import NavBar from './components/layout/NavBar';
 
 function App() {
+  console.log('App carregado')
   return (
     <UserProvider>
       <Content />
@@ -17,12 +16,11 @@ function App() {
 }
 
 function Content() {
-  const [userData] = useContext(UserContext); // Use o contexto corretamente
-
+  console.log('Content carregado')
   return (
     <div className="app">
       <NavBar />
-      <Routes isLogged={userData.isLogged} /> {/* Certifique-se de que userData esteja definido */}
+      <Routes  /> {/* Certifique-se de que userData esteja definido */}
       <Footer />
     </div>
   );

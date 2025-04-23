@@ -6,7 +6,7 @@ import withFetching from '../hocs/withFetching';
 import styles from './ToDo.module.css'
 import TaskCard from '../components/task/TaskCard';
 import TaskForm from '../components/task/TaskForm'
-import Container from '../components//layout/Container'
+import Container from '../components/layout/Container'
 import withAuth from '../hocs/withAuth';
 
 const reducerTask = (tasks, action) => {
